@@ -24,7 +24,7 @@ func (w *WorkspaceStore) Create(ctx context.Context, workspace *models.Workspace
 	query := `INSERT INTO workspaces(id, name, description, user_id, created_at, updated_at)
 	VALUE($1, $2, $3, $4, now(), now());`
 
-	_, err := w.conn.Exec(ctx, query, &workspace.CreatedAt, &workspace.Name, &workspace.Description, &workspace.OwnerID)
+	_, err := w.conn.Exec(ctx, query, &workspace.CreatedAt, &workspace.Name, &workspace.Description, &workspace.UserID)
 	if err != nil {
 		slog.Error("failed to create workspace", "error", err)
 		return err
@@ -55,7 +55,7 @@ func (w *WorkspaceStore) Get(ctx context.Context, id uuid.UUID) (models.Workspac
 	row := w.conn.QueryRow(ctx, query, id)
 
 	ws := models.Workspace{}
-	err := row.Scan(&ws.Id, &ws.Name, &ws.Description, &ws.OwnerID, &ws.CreatedAt, &ws.UpdatedAt)
+	err := row.Scan(&ws.Id, &ws.Name, &ws.Description, &ws.UserID, &ws.CreatedAt, &ws.UpdatedAt)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return models.Workspace{}, models.ErrNotFound
@@ -82,7 +82,7 @@ func (w *WorkspaceStore) GetAllForUser(ctx context.Context, userId uuid.UUID) ([
 	for rows.Next() {
 		var ws models.Workspace
 
-		err = rows.Scan(&ws.Id, &ws.Name, &ws.Description, &ws.OwnerID, &ws.CreatedAt, &ws.UpdatedAt)
+		err = rows.Scan(&ws.Id, &ws.Name, &ws.Description, &ws.UserID, &ws.CreatedAt, &ws.UpdatedAt)
 		if err != nil {
 			slog.Error("failed to scan workspace", "error", err.Error())
 			return nil, err

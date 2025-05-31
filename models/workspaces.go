@@ -18,8 +18,8 @@ type Workspace struct {
 	Id          uuid.UUID `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	OwnerID     uuid.UUID `json:"ownerId"`
-	Owner       *User     `json:"owner,omitempty"`
+	UserID      uuid.UUID `json:"ownerId"`
+	User        *User     `json:"owner,omitempty"`
 	CreatedAt   time.Time `json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
 }

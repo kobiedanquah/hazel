@@ -92,7 +92,7 @@ func (m *Mailer) generateMessage(recipient []Address, templateFile string, data 
 	return &msg, nil
 }
 
-func (m *Mailer) Send(recipients []Address, templateFile string, data interface{}) error {
+func (m *Mailer) Send(recipients []Address, templateFile string, data any) error {
 	msg, err := m.generateMessage(recipients, templateFile, data)
 	if err != nil {
 		return err

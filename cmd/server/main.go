@@ -15,20 +15,20 @@ import (
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		logFatal("failed to load environment variables", err)
+		panic(err)
 	}
 
 	cfg := loadConfig()
 
 	db, err := pgxpool.New(context.Background(), cfg.PostgresURL)
 	if err != nil {
-		logFatal("failed to connect to database", err)
+		panic(err)
 	}
 	defer db.Close()
 
 	err = db.Ping(context.Background())
 	if err != nil {
-		logFatal("failed to ping db", err)
+		panic(err)
 	}
 
 	mailer := mail.NewMailer(cfg.MailConfig)
@@ -41,6 +41,6 @@ func main() {
 	slog.Info("Starting server")
 	err = app.start()
 	if err != nil {
-		logFatal("failed to start server", err)
+		panic(err)
 	}
 }

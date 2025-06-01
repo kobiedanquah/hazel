@@ -50,7 +50,7 @@ func (s *UserService) CreateUser(ctx context.Context, name, email, password stri
 		Email:        email,
 		PasswordHash: hash,
 		CreatedAt:    now,
-		UpdatedAt:    now,
+		LastModifed:  now,
 		Verified:     false,
 	}
 
@@ -146,7 +146,7 @@ func (us *UserService) NewSession(context context.Context, email string, passwor
 
 // UpdateUser updates an existing user's details
 func (s *UserService) UpdateUser(ctx context.Context, user *models.User) error {
-	user.UpdatedAt = time.Now().UTC()
+	user.LastModifed = time.Now().UTC()
 	return s.store.UpdateUser(ctx, user)
 }
 

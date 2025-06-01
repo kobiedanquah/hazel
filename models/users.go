@@ -19,7 +19,7 @@ type User struct {
 	PasswordHash []byte    `json:"-"`
 	ProfilePhoto string    `json:"profilePhoto"`
 	CreatedAt    time.Time `json:"createdAt"`
-	UpdatedAt    time.Time `json:"updatedAt"`
+	LastModifed  time.Time `json:"lastModified"`
 	Verified     bool      `json:"verified"`
 }
 

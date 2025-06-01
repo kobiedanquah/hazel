@@ -35,7 +35,7 @@ func createTestUser(name, email string) *models.User {
 		Email:        email,
 		PasswordHash: []byte("hashedpassword"),
 		CreatedAt:    time.Now().UTC(),
-		UpdatedAt:    time.Now().UTC(),
+		LastModifed:  time.Now().UTC(),
 		Verified:     true,
 	}
 }
@@ -78,7 +78,7 @@ func TestUserStore_CreateUser(t *testing.T) {
 				Email:        generateTestEmail(),
 				PasswordHash: []byte("hashedpassword"),
 				CreatedAt:    time.Now().UTC(),
-				UpdatedAt:    time.Now().UTC(),
+				LastModifed:  time.Now().UTC(),
 			},
 			wantErr: true,
 		},
@@ -183,7 +183,7 @@ func TestUserStore_UpdateUser(t *testing.T) {
 			if tt.updates != nil {
 				tt.updates(tt.user)
 			}
-			tt.user.UpdatedAt = time.Now().UTC()
+			tt.user.LastModifed = time.Now().UTC()
 
 			err := store.UpdateUser(ctx, tt.user)
 			if tt.wantErr {

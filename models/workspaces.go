@@ -15,13 +15,13 @@ var (
 // Workspace represents a top-level organizational unit or collaboration space.
 // Projects and Users belong to a Workspace.
 type Workspace struct {
-	Id          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	UserID      uuid.UUID `json:"ownerId"`
-	User        *User     `json:"owner,omitempty"`
-	CreatedAt   time.Time `json:"createdAt"`
-	UpdatedAt   time.Time `json:"updatedAt"`
+	Id           uuid.UUID `json:"id"`
+	Name         string    `json:"name"`
+	Description  string    `json:"description"`
+	UserID       uuid.UUID `json:"ownerId"`
+	User         *User     `json:"owner,omitempty"`
+	CreatedAt    time.Time `json:"createdAt"`
+	LastModified time.Time `json:"lastModified"`
 }
 
 type WorkspaceStore interface {

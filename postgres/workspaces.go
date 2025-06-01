@@ -21,7 +21,7 @@ func NewWorkspaceStore(conn *pgxpool.Pool) models.WorkspaceStore {
 
 // Create implements models.WorkspaceStore.
 func (w *WorkspaceStore) Create(ctx context.Context, workspace *models.Workspace) error {
-	query := `INSERT INTO workspaces(id, name, description, user_id, created_at, updated_at)
+	query := `INSERT INTO workspaces(id, name, description, user_id, created_at, last_modified)
 	VALUE($1, $2, $3, $4, now(), now());`
 
 	_, err := w.conn.Exec(ctx, query, &workspace.CreatedAt, &workspace.Name, &workspace.Description, &workspace.UserID)
@@ -49,13 +49,13 @@ func (w *WorkspaceStore) Delete(ctx context.Context, id uuid.UUID) error {
 
 // Get implements models.WorkspaceStore.
 func (w *WorkspaceStore) Get(ctx context.Context, id uuid.UUID) (models.Workspace, error) {
-	query := `SELECT id, name, descrption, user_id, created_at, updated_at
+	query := `SELECT id, name, descrption, user_id, created_at, last_modified
 	FROM workspaces WHERE id = $1;`
 
 	row := w.conn.QueryRow(ctx, query, id)
 
 	ws := models.Workspace{}
-	err := row.Scan(&ws.Id, &ws.Name, &ws.Description, &ws.UserID, &ws.CreatedAt, &ws.UpdatedAt)
+	err := row.Scan(&ws.Id, &ws.Name, &ws.Description, &ws.UserID, &ws.CreatedAt, &ws.LastModified)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return models.Workspace{}, models.ErrNotFound
@@ -69,7 +69,7 @@ func (w *WorkspaceStore) Get(ctx context.Context, id uuid.UUID) (models.Workspac
 
 // GetAllForUser implements models.WorkspaceStore.
 func (w *WorkspaceStore) GetAllForUser(ctx context.Context, userId uuid.UUID) ([]models.Workspace, error) {
-	query := `SELECT id, name, description, user_id, created_at, updated_at
+	query := `SELECT id, name, description, user_id, created_at, last_modified
 	FROM workspaces WHERE user_id = $1;`
 
 	rows, err := w.conn.Query(ctx, query, userId)
@@ -82,7 +82,7 @@ func (w *WorkspaceStore) GetAllForUser(ctx context.Context, userId uuid.UUID) ([
 	for rows.Next() {
 		var ws models.Workspace
 
-		err = rows.Scan(&ws.Id, &ws.Name, &ws.Description, &ws.UserID, &ws.CreatedAt, &ws.UpdatedAt)
+		err = rows.Scan(&ws.Id, &ws.Name, &ws.Description, &ws.UserID, &ws.CreatedAt, &ws.LastModified)
 		if err != nil {
 			slog.Error("failed to scan workspace", "error", err.Error())
 			return nil, err
@@ -95,7 +95,7 @@ func (w *WorkspaceStore) GetAllForUser(ctx context.Context, userId uuid.UUID) ([
 
 // Update implements models.WorkspaceStore.
 func (w *WorkspaceStore) Update(ctx context.Context, workspace *models.Workspace) error {
-	query := `UPDATE workspaces SET name = $1, description = $2, updated_at = now()
+	query := `UPDATE workspaces SET name = $1, description = $2, last_modified = now()
 	WHERE id = $3;`
 
 	_, err := w.conn.Exec(ctx, query, workspace.Name, workspace.Description, workspace.Id)

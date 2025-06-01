@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash bytea NOT NULL,
     profile_photo TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT now (),
-    updated_at TIMESTAMP NOT NULL DEFAULT now (),
+    last_modified TIMESTAMP NOT NULL DEFAULT now (),
     verified BOOLEAN NOT NULL DEFAULT false
 );
 

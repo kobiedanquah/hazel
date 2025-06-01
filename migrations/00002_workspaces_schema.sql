@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS workspaces(
     description TEXT,
     user_id uuid NOT NULL,
     created_at TIMESTAMP DEFAULT now() NOT NULL,
-    updated_at TIMESTAMP DEFAULT now() NOT NULL,
+    last_modified TIMESTAMP DEFAULT now() NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 -- +goose StatementEnd

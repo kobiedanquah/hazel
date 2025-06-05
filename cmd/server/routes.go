@@ -1,20 +1,26 @@
 package main
 
 import (
+	"github.com/freekobie/hazel/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
 func (s *application) routes() *gin.Engine {
-	router := gin.Default()
-
+	router := gin.New()
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
 	// users
-	router.POST("auth/register", s.h.CreateUser)
-	router.POST("auth/login", s.h.LoginUser)
+	router.POST("/auth/register", s.h.CreateUser)
+	router.POST("/auth/login", s.h.LoginUser)
 	router.POST("/auth/verify", s.h.VerifyUser)
-	router.GET("/users/:id", s.h.GetUser)
-	router.DELETE("/users/:id", s.h.DeleteUser)
+	router.POST("/auth/verify/request", s.h.RequestVerification)
 
-	// users
-	router.POST("/workspaces", s.h.CreateWorkspace)
+	authorized := router.Group("/")
+	authorized.Use(middlewares.Authentication())
+	{
+		authorized.GET("/users/:id", s.h.GetUser)
+		authorized.DELETE("/users/:id", s.h.DeleteUser)
+	}
+
 	return router
 }

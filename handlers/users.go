@@ -61,6 +61,10 @@ func (h *Handler) VerifyUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"user": user})
 }
 
+func (h *Handler) RequestVerification(c *gin.Context) {
+
+}
+
 func (h *Handler) LoginUser(c *gin.Context) {
 	var input struct {
 		Email    string `json:"email" binding:"required"`

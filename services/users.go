@@ -61,6 +61,7 @@ func (s *UserService) CreateUser(ctx context.Context, name, email, password stri
 	}
 
 	otpString := generateOTP()
+	slog.Debug("OTP verificatio code", "code", otpString) //TODO: delete this line later
 	otpHash := hashString(otpString)
 
 	userAddr := mail.Address{Name: user.Name, Email: user.Email}

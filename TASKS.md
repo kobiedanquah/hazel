@@ -16,8 +16,8 @@
 - [X] User registration
 - [X] User login
 - [X] Password hashing (bcrypt)
-- [ ] JWT generation (access token)
-- [ ] JWT middleware for route protection
+- [X] JWT generation (access token)
+- [X] JWT middleware for route protection
 - [ ] **Role-based middleware (Admin, Manager, User)** [Maybe]
 
 ---
@@ -77,11 +77,11 @@
 ---
 
 ## ⚙️ Middleware & Utilities
-- [ ] JWT authentication middleware
+- [X] JWT authentication middleware
 - [ ] Error handling middleware
 - [ ] Request logging (e.g., Gin's logger or `zap`)
 - [ ] Rate limiting (e.g., `golang.org/x/time/rate`)
-- [ ] Input validation (e.g., `go-playground/validator`)
+- [X] Input validation (e.g., `go-playground/validator`)
 
 ---
 

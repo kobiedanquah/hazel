@@ -31,6 +31,14 @@ func (s *WorkspaceService) NewWorkspace(ctx context.Context, ws *models.Workspac
 	return nil
 }
 
+func (s *WorkspaceService) GetWorkspace(ctx context.Context, id uuid.UUID) (*models.Workspace, error) {
+	ws, err := s.store.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return ws, nil
+}
+
 func (s *WorkspaceService) UpdateWorkspace(ctx context.Context, ws *models.Workspace) error {
 	workspace, err := s.store.Get(ctx, ws.Id)
 	if err != nil {
@@ -41,7 +49,7 @@ func (s *WorkspaceService) UpdateWorkspace(ctx context.Context, ws *models.Works
 	workspace.Description = ws.Description
 	workspace.LastModified = time.Now()
 
-	err = s.store.Update(ctx, &workspace)
+	err = s.store.Update(ctx, workspace)
 	if err != nil {
 		return err
 	}

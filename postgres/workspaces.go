@@ -55,28 +55,31 @@ func (w *WorkspaceStore) Create(ctx context.Context, ws *models.Workspace) error
 }
 
 // Get implements models.WorkspaceStore.
-func (w *WorkspaceStore) Get(ctx context.Context, id uuid.UUID) (models.Workspace, error) {
+func (w *WorkspaceStore) Get(ctx context.Context, id uuid.UUID) (*models.Workspace, error) {
 	query := `SELECT
 	w.id, w.name, w.description, w.created_at, w.last_modified,
-	u.id, u.name, u.email, u.profile_picture, u.created_at, u.last_modified, u.verified
+	u.id, u.name, u.email, u.profile_photo, u.created_at, u.last_modified, u.verified
 	FROM workspaces AS w
 	INNER JOIN users AS u
 	ON w.user_id = u.id
-	WHERE id = $1;`
+	WHERE w.id = $1;`
 
 	row := w.conn.QueryRow(ctx, query, id)
 
-	ws := models.Workspace{}
+	ws := models.Workspace{
+		User: &models.User{},
+	}
+
 	err := row.Scan(&ws.Id, &ws.Name, &ws.Description, &ws.CreatedAt, &ws.LastModified, &ws.User.Id, &ws.User.Name, &ws.User.Email, &ws.User.ProfilePhoto, &ws.User.CreatedAt, &ws.User.LastModifed, &ws.User.Verified)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return models.Workspace{}, models.ErrNotFound
+			return nil, models.ErrNotFound
 		}
 		slog.Error("failed to read workspace", "error", err)
-		return models.Workspace{}, err
+		return nil, err
 	}
 
-	return ws, nil
+	return &ws, nil
 }
 
 // GetAllForUser implements models.WorkspaceStore.

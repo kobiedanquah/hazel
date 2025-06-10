@@ -27,6 +27,6 @@ type WorkspaceStore interface {
 	Create(ctx context.Context, workspace *Workspace) error
 	Update(ctx context.Context, workspace *Workspace) error
 	Delete(ctx context.Context, id uuid.UUID) error
-	Get(ctx context.Context, id uuid.UUID) (Workspace, error)
+	Get(ctx context.Context, id uuid.UUID) (*Workspace, error)
 	GetAllForUser(ctx context.Context, userId uuid.UUID) ([]Workspace, error)
 }

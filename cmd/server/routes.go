@@ -26,7 +26,7 @@ func (s *application) routes() *gin.Engine {
 
 		// workspaces
 		authorized.POST("/workspaces", s.h.CreateWorkspace)
-		authorized.GET("/workspaces/:id")
+		authorized.GET("/workspaces/:id", s.h.GetWorkspace)
 		authorized.GET("/workspaces/:id/members")
 
 		// projects

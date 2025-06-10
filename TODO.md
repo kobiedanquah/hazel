@@ -48,15 +48,17 @@
 - [X] `DELETE /users/me` – Delete account
 
 ### Workspaces
-- [ ] `POST /workspaces` – Create workspace
+- [X] `POST /workspaces` – Create workspace
 - [ ] `GET /workspaces` – List all user workspaces
-- [ ] `GET /workspaces/:id` – Get specific workspace
+- [X] `GET /workspaces/:id` – Get specific workspace
 - [ ] `PATCH /workspaces/:id` – Update workspace
 - [ ] `DELETE /workspaces/:id` – Delete workspace
+- [ ] `POST /workspaces/:id/member` - Join a workspace
+- [ ] `DELETE /workspaces/:id/member` - Leave a workspace
 
 ### Projects
 - [ ] `POST /workspaces/:workspaceId/projects` – Create project
-- [ ] `GET /workspaces/:workspaceId/projects` – List projects in a workspace
+- [ ] `GET /workspaces/:workspaceId/projects` – List projects in a workspace(list can be filtered by `all` or `member`)
 - [ ] `GET /projects/:id` – Get project details
 - [ ] `PATCH /projects/:id` – Update project
 - [ ] `DELETE /projects/:id` – Delete project

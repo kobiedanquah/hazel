@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/freekobie/hazel/models"
@@ -34,4 +36,48 @@ func (h *Handler) CreateWorkspace(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, ws)
+}
+
+func (h *Handler) GetWorkspace(c *gin.Context) {
+	idStr := c.Param("id")
+
+	if err := validate.Var(idStr, "uuid"); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
+		return
+	}
+
+	ws, err := h.wss.GetWorkspace(c.Request.Context(), uuid.MustParse(idStr))
+	if err != nil {
+		if errors.Is(err, models.ErrNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, ws)
+}
+
+// Get all the workspaces where a user has membership.
+func (h *Handler) GetUserWorkspaces(c *gin.Context) {
+	idStr := c.Param("id")
+	fmt.Println(idStr)
+
+	if err := validate.Var(idStr, "uuid"); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
+		return
+	}
+
+	workspaces, err := h.wss.GetWorkspace(c.Request.Context(), uuid.MustParse(idStr))
+	if err != nil {
+		if errors.Is(err, models.ErrNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, workspaces)
 }

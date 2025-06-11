@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS workspace_memberships(
     role TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT now() NOT NULL,
     PRIMARY KEY (workspace_id, user_id),
-    FOREIGN KEY (workspace_id) REFERENCES workspaces(id),
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 -- +goose StatementEnd
 

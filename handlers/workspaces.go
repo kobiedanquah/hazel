@@ -100,3 +100,19 @@ func (h *Handler) UpdateWorkspace(c *gin.Context) {
 
 	c.JSON(http.StatusOK, ws)
 }
+
+func (h *Handler) DeleteWorkspace(c *gin.Context) {
+	idStr := c.Param("id")
+	if err := validate.Var(idStr, "uuid"); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
+		return
+	}
+
+	err := h.wss.DeleteWorkspace(c.Request.Context(), uuid.MustParse(idStr))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "workspace successfully deleted"})
+}

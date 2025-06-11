@@ -24,6 +24,7 @@ func (s *WorkspaceService) NewWorkspace(ctx context.Context, ws *models.Workspac
 	ws.CreatedAt = createdAt
 	ws.LastModified = createdAt
 	ws.User.Role = "admin"
+
 	err := s.store.Create(ctx, ws)
 	if err != nil {
 		return err
@@ -73,4 +74,8 @@ func (s *WorkspaceService) UpdateWorkspace(ctx context.Context, wsData map[strin
 	}
 
 	return workspace, nil
+}
+
+func (s *WorkspaceService) DeleteWorkspace(ctx context.Context, id uuid.UUID) error {
+	return s.store.Delete(ctx, id)
 }

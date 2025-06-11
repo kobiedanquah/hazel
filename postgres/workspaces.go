@@ -98,12 +98,10 @@ func (w *WorkspaceStore) GetAllForUser(ctx context.Context, userId uuid.UUID) ([
 	u.last_modified,
 	u.verified,
 	wm.role
-	FROM users AS u
-	INNER JOIN workspace_memberships AS wm
-	ON u.id = wm.user_id
-	INNER JOIN workspaces AS w
-	ON w.user_id = u.id
-	WHERE u.id = $1;` // FIX: fix error of return more rows and wrong data
+	FROM workspace_memberships AS wm
+  	INNER JOIN workspaces AS w ON wm.workspace_id = w.id
+	INNER JOIN users AS u	ON w.user_id = u.id
+	WHERE wm.user_id = $1;`
 
 	rows, err := w.conn.Query(ctx, query, userId)
 	if err != nil {

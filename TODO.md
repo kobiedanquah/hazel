@@ -49,7 +49,7 @@
 
 ### Workspaces
 - [X] `POST /workspaces` – Create workspace
-- [ ] `GET /workspaces` – List all user workspaces
+- [X] `GET /workspaces` – List all user workspaces
 - [X] `GET /workspaces/:id` – Get specific workspace
 - [ ] `PATCH /workspaces/:id` – Update workspace
 - [ ] `DELETE /workspaces/:id` – Delete workspace

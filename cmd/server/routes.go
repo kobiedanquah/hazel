@@ -34,6 +34,11 @@ func (s *application) routes() *gin.Engine {
 		authorized.DELETE("/workspaces/:id/members/:member_id", s.h.DeleteWorkspaceMember)
 
 		// projects
+		authorized.POST("/workspaces/:workspaceId/projects")
+		authorized.GET("/workspaces/:workspaceId/projects")
+		authorized.GET("/projects/:id")
+		authorized.PATCH("/projects/:id")
+		authorized.DELETE("/projects/:id")
 
 		// Tasks
 

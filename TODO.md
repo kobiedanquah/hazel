@@ -25,11 +25,11 @@
 ## Core Models & Database Schema
 - [X] User
 - [X] Workspace
-- [ ] Project (belongs to Workspace)
+- [X] Project (belongs to Workspace)
 - [ ] Task (belongs to Project)
 - [ ] Comment (optional, belongs to Task)
 - [ ] Relationships and constraints
-- [ ] Auto migrations (`github.com/pressly/goose`)
+- [X] Auto migrations (`github.com/pressly/goose`)
 - [ ] Database seeding for development
 
 ---

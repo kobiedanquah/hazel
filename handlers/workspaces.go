@@ -150,7 +150,7 @@ func (h *Handler) AddWorkspaceMember(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "workspace member successfully added"})
 }
 
-func (h *handler) GetWorkspaceMembers(c *gin.Context) {
+func (h *Handler) GetWorkspaceMembers(c *gin.Context) {
 
 }
 

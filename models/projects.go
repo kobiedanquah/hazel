@@ -20,9 +20,9 @@ type Project struct {
 }
 
 type ProjectStore interface {
-	Create(ctx context.Context, project *Project) error
-	Update(ctx context.Context, project *Project) error
-	Get(ctx context.Context, id uuid.UUID) (Project, error)
-	GetAllForWorkspace(ctx context.Context, workspaceId uuid.UUID) ([]Project, error)
-	Delete(ctx context.Context, id uuid.UUID) error
+	CreateProject(ctx context.Context, project *Project) error
+	UpdateProject(ctx context.Context, project *Project) error
+	GetProject(ctx context.Context, id uuid.UUID) (*Project, error)
+	GetWorkspaceProjects(ctx context.Context, workspaceId uuid.UUID) ([]Project, error)
+	DeleteProject(ctx context.Context, id uuid.UUID) error
 }

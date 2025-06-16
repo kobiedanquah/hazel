@@ -26,9 +26,8 @@
 - [X] User
 - [X] Workspace
 - [X] Project (belongs to Workspace)
-- [ ] Task (belongs to Project)
+- [X] Task (belongs to Project)
 - [ ] Comment (optional, belongs to Task)
-- [ ] Relationships and constraints
 - [X] Auto migrations (`github.com/pressly/goose`)
 - [ ] Database seeding for development
 
@@ -55,10 +54,10 @@
 - [X] `DELETE /workspaces/:id` – Delete workspace
 - [X] `POST /workspaces/:id/member` - Join a workspace
 - [X] `DELETE /workspaces/:id/member` - Leave a workspace
+- [ ] `GET /workspaces/:workspaceId/projects` – List projects in a workspace(list can be filtered by `all` or `member`)
 
 ### Projects
-- [ ] `POST /workspaces/:workspaceId/projects` – Create project
-- [ ] `GET /workspaces/:workspaceId/projects` – List projects in a workspace(list can be filtered by `all` or `member`)
+- [X] `POST /projects` – Create project
 - [ ] `GET /projects/:id` – Get project details
 - [ ] `PATCH /projects/:id` – Update project
 - [ ] `DELETE /projects/:id` – Delete project

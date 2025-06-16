@@ -2,18 +2,50 @@ package models
 
 import (
 	"context"
+	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/google/uuid"
 )
+
+type Date struct {
+	time.Time
+}
+
+const dateLayout = "2006-01-02"
+
+func (d *Date) MarshalJSON() ([]byte, error) {
+	formatted := fmt.Sprintf("\"%s\"", d.Format(dateLayout))
+	return []byte(formatted), nil
+}
+
+func (d *Date) UnmarshalJSON(data []byte) error {
+	str := string(data)
+	if str == "null" || str == "" {
+		d.Time = time.Time{}
+		return nil
+	}
+	if len(str) > 0 && str[0] == '"' && str[len(str)-1] == '"' {
+		str = str[1 : len(str)-1]
+	}
+
+	parsed, err := time.Parse(dateLayout, str)
+	if err != nil {
+		slog.Error("failed to parse time", "error", err.Error())
+		return err
+	}
+	d.Time = parsed
+	return nil
+}
 
 type Project struct {
 	Id           uuid.UUID  `json:"id"`
 	Name         string     `json:"name"`
 	Description  string     `json:"description"`
 	Workspace    *Workspace `json:"workspace,omitempty"`
-	StartDate    time.Time  `json:"startDate,omitzero"`
-	EndDate      time.Time  `json:"endDate,omitzero"`
+	StartDate    Date       `json:"startDate,omitzero"`
+	EndDate      Date       `json:"endDate,omitzero"`
 	Status       string     `json:"status"`
 	CreatedAt    time.Time  `json:"createdAt"`
 	LastModified time.Time  `json:"lastModified"`

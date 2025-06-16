@@ -31,4 +31,5 @@ type WorkspaceStore interface {
 	GetAllForUser(ctx context.Context, userId uuid.UUID) ([]Workspace, error)
 	AddMembership(ctx context.Context, workspaceId, userId uuid.UUID, role string) error
 	DeleteMembership(ctx context.Context, workspaceId, userId uuid.UUID) error
+	ProjectStore
 }

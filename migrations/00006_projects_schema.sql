@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS projects(
     created_at TIMESTAMP DEFAULT now() NOT NULL,
     last_modified TIMESTAMP DEFAULT now() NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (workspace_id) REFERENCES workspaces(id)    
+    FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASECADE    
 );
 -- +goose StatementEnd
 

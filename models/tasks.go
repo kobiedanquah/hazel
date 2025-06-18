@@ -27,22 +27,21 @@ const (
 
 // Task represents a single work item within a project.
 type Task struct {
-	Id          uuid.UUID    `json:"id"`
-	Title       string       `json:"title"`
-	Description string       `json:"description"`
-	Project     *Project     `json:"project,omitemtpy"`
-	AssignedTo  []User       `json:"assignedTo,omitempty"`
-	Status      TaskStatus   `json:"status"`
-	Priority    TaskPriority `json:"priority"`
-	Due         time.Time    `json:"due,omitzero"`
-	CreatedAt   time.Time    `json:"createdAt"`
-	UpdatedAt   time.Time    `json:"updatedAt"`
+	Id           uuid.UUID    `json:"id"`
+	Title        string       `json:"title"`
+	Description  string       `json:"description"`
+	Project      *Project     `json:"project,omitemtpy"`
+	Status       TaskStatus   `json:"status"`
+	Priority     TaskPriority `json:"priority"`
+	Due          time.Time    `json:"due,omitzero"`
+	CreatedAt    time.Time    `json:"createdAt"`
+	LastModified time.Time    `json:"lastModified"`
 }
 
 type TaskStore interface {
-	Create(ctx context.Context, task *Task) error
-	Update(ctx context.Context, task *Task) error
-	Get(ctx context.Context, id uuid.UUID) (Task, error)
-	GetAllForProject(ctx context.Context, projectId uuid.UUID)
-	Delete(ctx context.Context, id uuid.UUID) error
+	CreateTask(ctx context.Context, task *Task) error
+	UpdateTask(ctx context.Context, task *Task) error
+	GetTask(ctx context.Context, id uuid.UUID) (*Task, error)
+	GetTasksForProject(ctx context.Context, projectId uuid.UUID) ([]Task, error)
+	DeleteTask(ctx context.Context, id uuid.UUID) error
 }

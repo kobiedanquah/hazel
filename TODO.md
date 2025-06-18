@@ -7,7 +7,6 @@
 - [X] Set up configuration management (`viper` or env parsing)
 - [X] Create `.env` for local development
 - [X] Set up Dockerfile and docker-compose.yml
-- [ ] Integrate PostgreSQL via Docker
 - [X] Create Taskfile.yaml scripts for build and dev tasks
 
 ---
@@ -18,7 +17,7 @@
 - [X] Password hashing (bcrypt)
 - [X] JWT generation (access token)
 - [X] JWT middleware for route protection
-- [ ] **Role-based middleware (Admin, Manager, User)** [Maybe]
+- [ ] **Role-based middleware (Admin, Manager, User)** 
 
 ---
 
@@ -28,7 +27,6 @@
 - [X] Project (belongs to Workspace)
 - [X] Task (belongs to Project)
 - [X] Auto migrations (`github.com/pressly/goose`)
-- [ ] Database seeding for development
 
 ---
 

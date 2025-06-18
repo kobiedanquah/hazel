@@ -32,4 +32,5 @@ type WorkspaceStore interface {
 	AddMembership(ctx context.Context, workspaceId, userId uuid.UUID, role string) error
 	DeleteMembership(ctx context.Context, workspaceId, userId uuid.UUID) error
 	ProjectStore
+	TaskStore
 }

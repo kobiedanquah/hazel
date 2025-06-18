@@ -16,33 +16,39 @@ func (app *application) routes() *gin.Engine {
 	router.POST("/auth/verify", app.h.VerifyUser)
 	router.POST("/auth/verify/request", app.h.RequestVerification)
 
-	authorized := router.Group("/")
-	authorized.Use(middlewares.Authentication())
+	protected := router.Group("/")
+	protected.Use(middlewares.Authentication())
 	{
 		//users
-		authorized.GET("/users/:id", app.h.GetUser)
-		authorized.PATCH("/users/profile", app.h.UpdateUserData)
-		authorized.DELETE("/users/:id", app.h.DeleteUser)
+		protected.GET("/users/:id", app.h.GetUser)
+		protected.PATCH("/users/profile", app.h.UpdateUserData)
+		protected.DELETE("/users/:id", app.h.DeleteUser)
 
 		// workspaces
-		authorized.POST("/workspaces", app.h.CreateWorkspace)
-		authorized.GET("/workspaces/:id", app.h.GetWorkspace)
-		authorized.GET("/workspaces/me", app.h.GetUserWorkspaces)
-		authorized.PATCH("/workspaces/:id", app.h.UpdateWorkspace)
-		authorized.DELETE("/workspaces/:id", app.h.DeleteWorkspace)
-		authorized.POST("/workspaces/:id/members", app.h.AddWorkspaceMember)
-		authorized.DELETE("/workspaces/:id/members/:member_id", app.h.DeleteWorkspaceMember)
-		authorized.GET("/workspaces/:id/projects", app.h.GetProjectsInWorkspace)
+		protected.POST("/workspaces", app.h.CreateWorkspace)
+		protected.GET("/workspaces/:id", app.h.GetWorkspace)
+		protected.GET("/workspaces/me", app.h.GetUserWorkspaces)
+		protected.PATCH("/workspaces/:id", app.h.UpdateWorkspace)
+		protected.DELETE("/workspaces/:id", app.h.DeleteWorkspace)
+		protected.POST("/workspaces/:id/members", app.h.AddWorkspaceMember)
+		protected.DELETE("/workspaces/:id/members/:member_id", app.h.DeleteWorkspaceMember)
+		protected.GET("/workspaces/:id/projects", app.h.GetProjectsInWorkspace)
+
 		// projects
-		authorized.POST("/projects", app.h.CreateProject)
-		authorized.GET("/projects/:id", app.h.GetProject)
-		authorized.PATCH("/projects/:id", app.h.UpdateProject)
-		authorized.DELETE("/projects/:id", app.h.DeleteProject)
-		authorized.GET("/projects/:id/tasks")
+		protected.POST("/projects", app.h.CreateProject)
+		protected.GET("/projects/:id", app.h.GetProject)
+		protected.PATCH("/projects/:id", app.h.UpdateProject)
+		protected.DELETE("/projects/:id", app.h.DeleteProject)
+		protected.GET("/projects/:id/tasks")
 
 		// Tasks
-
-		// Comments
+		protected.POST("/tasks", app.h.CreateTask)
+		protected.GET("/tasks/:id", app.h.GetTask)
+		protected.PATCH("/tasks/:id", app.h.UpdateTask)
+		protected.DELETE("/tasks/:id", app.h.DeleteTask)
+		protected.POST("/tasks/:id/assignments")
+		protected.GET("/tasks/:id/assignments")
+		protected.DELETE("/tasks/:id/assignments/:member_id")
 	}
 
 	return router

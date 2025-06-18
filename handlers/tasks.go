@@ -100,6 +100,24 @@ func (h *Handler) UpdateTask(c *gin.Context) {
 
 func (h *Handler) GetProjectTasks(c *gin.Context) {
 
+	id, err := getUUIDparam(c, "id")
+	if err != nil {
+		slog.Error("failed to get id param", "error", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
+		return
+	}
+
+	tasks, err := h.wss.GetProjectTasks(c.Request.Context(), id)
+	if err != nil {
+		if errors.Is(err, models.ErrNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, tasks)
 }
 
 func (h *Handler) DeleteTask(c *gin.Context) {

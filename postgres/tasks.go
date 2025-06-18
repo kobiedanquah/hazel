@@ -87,9 +87,9 @@ func (w *WorkspaceStore) GetTasksForProject(ctx context.Context, projectId uuid.
 	description,
 	status,
 	priority,
-	due,
+	COALESCE(due,'0001-01-01 00:00:00'),
 	created_at,
-	last_modified,
+	last_modified
 	FROM tasks
 	WHERE project_id = $1;`
 

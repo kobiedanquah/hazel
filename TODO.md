@@ -51,13 +51,14 @@
 - [X] `DELETE /workspaces/:id` – Delete workspace
 - [X] `POST /workspaces/:id/member` - Join a workspace
 - [X] `DELETE /workspaces/:id/member` - Leave a workspace
-- [X] `GET /workspaces/:workspaceId/projects` – List projects in a workspace
+- [X] `GET /workspaces/:id/projects` – List projects in a workspace
 
 ### Projects
 - [X] `POST /projects` – Create project
 - [X] `GET /projects/:id` – Get project details
 - [X] `PATCH /projects/:id` – Update project
 - [X] `DELETE /projects/:id` – Delete project
+- [X] `GET /projects/:id/tasks` – List tasks in a project
 
 ### Tasks
 - [X] `POST /projects/:projectId/tasks` – Create task
@@ -65,7 +66,8 @@
 - [X] `GET /tasks/:id` – Get task
 - [X] `PATCH /tasks/:id` – Update task
 - [X] `DELETE /tasks/:id` – Delete task
-- [ ] `PATCH /tasks/:id/assign` – Assign task to user
+- [ ] `POST /tasks/:id/assign` – Assign task to user
+- [ ] `DELETE /tasks/:id/assign` – Remove task assignment
 
 ---
 

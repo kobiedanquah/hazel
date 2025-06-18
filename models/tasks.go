@@ -30,7 +30,7 @@ type Task struct {
 	Id           uuid.UUID    `json:"id"`
 	Title        string       `json:"title"`
 	Description  string       `json:"description"`
-	Project      *Project     `json:"project,omitemtpy"`
+	Project      *Project     `json:"project,omitzero"`
 	Status       TaskStatus   `json:"status"`
 	Priority     TaskPriority `json:"priority"`
 	Due          time.Time    `json:"due,omitzero"`

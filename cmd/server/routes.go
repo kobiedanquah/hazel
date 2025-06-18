@@ -39,7 +39,7 @@ func (app *application) routes() *gin.Engine {
 		protected.GET("/projects/:id", app.h.GetProject)
 		protected.PATCH("/projects/:id", app.h.UpdateProject)
 		protected.DELETE("/projects/:id", app.h.DeleteProject)
-		protected.GET("/projects/:id/tasks")
+		protected.GET("/projects/:id/tasks", app.h.GetProjectTasks)
 
 		// Tasks
 		protected.POST("/tasks", app.h.CreateTask)

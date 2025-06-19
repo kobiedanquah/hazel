@@ -31,6 +31,7 @@ func (app *application) routes() *gin.Engine {
 		protected.PATCH("/workspaces/:id", app.h.UpdateWorkspace)
 		protected.DELETE("/workspaces/:id", app.h.DeleteWorkspace)
 		protected.POST("/workspaces/:id/members", app.h.AddWorkspaceMember)
+		protected.GET("/workspaces/:id/members", app.h.GetWorkspaceMembers)
 		protected.DELETE("/workspaces/:id/members/:member_id", app.h.DeleteWorkspaceMember)
 		protected.GET("/workspaces/:id/projects", app.h.GetProjectsInWorkspace)
 
@@ -46,9 +47,9 @@ func (app *application) routes() *gin.Engine {
 		protected.GET("/tasks/:id", app.h.GetTask)
 		protected.PATCH("/tasks/:id", app.h.UpdateTask)
 		protected.DELETE("/tasks/:id", app.h.DeleteTask)
-		protected.POST("/tasks/:id/assignments")
-		protected.GET("/tasks/:id/assignments")
-		protected.DELETE("/tasks/:id/assignments/:member_id")
+		protected.POST("/tasks/:id/assignments", app.h.AssignTaskToUser)
+		protected.GET("/tasks/:id/assignments", app.h.GetAssignedUsers)
+		protected.DELETE("/tasks/:id/assignments/:user_id", app.h.RemoveAssignment)
 	}
 
 	return router

@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"errors"
 	"strings"
 	"time"
 
@@ -86,7 +85,7 @@ func (s *WorkspaceService) AddWorkspaceMember(ctx context.Context, workspaceId, 
 	err := s.store.AddMembership(ctx, workspaceId, userId, role)
 	if err != nil {
 		if strings.Contains(err.Error(), "SQLSTATE 23505") {
-			return errors.New("user already a member of workspace")
+			return ErrDuplicateEntry
 		}
 
 		return ErrFailedOperation

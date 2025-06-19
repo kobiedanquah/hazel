@@ -165,13 +165,15 @@ func (h *Handler) DeleteWorkspaceMember(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
 		return
 	}
-	memberId := c.Param("member_id")
-	if err := validate.Var(memberId, "uuid"); err != nil {
+
+	memberId, err := getUUIDparam(c, "member_id")
+	if err != nil {
+		slog.Error("failed to get uuid param", "error", err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
 		return
 	}
 
-	err = h.wss.DeleteWorkspaceMember(c.Request.Context(), id, uuid.MustParse(memberId))
+	err = h.wss.DeleteWorkspaceMember(c.Request.Context(), id, memberId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
 		return

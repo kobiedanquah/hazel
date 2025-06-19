@@ -68,6 +68,7 @@
 - [X] `DELETE /tasks/:id` – Delete task
 - [ ] `POST /tasks/:id/assign` – Assign task to user
 - [ ] `DELETE /tasks/:id/assign` – Remove task assignment
+- [ ] `GET /tasks/:id/assign` – Get all users assigned to a task
 
 ---
 

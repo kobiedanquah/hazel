@@ -44,4 +44,7 @@ type TaskStore interface {
 	GetTask(ctx context.Context, id uuid.UUID) (*Task, error)
 	GetTasksForProject(ctx context.Context, projectId uuid.UUID) ([]Task, error)
 	DeleteTask(ctx context.Context, id uuid.UUID) error
+	AssignTask(ctx context.Context, taskId, userId uuid.UUID) error
+	UnassignTask(ctx context.Context, taskId, userId uuid.UUID) error
+	GetAssignedUsers(ctx context.Context, taskId uuid.UUID) ([]User, error)
 }

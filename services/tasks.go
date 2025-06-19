@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/freekobie/hazel/models"
@@ -77,4 +78,24 @@ func (s *WorkspaceService) DeleteTask(ctx context.Context, id uuid.UUID) error {
 
 func (s *WorkspaceService) GetProjectTasks(ctx context.Context, projectId uuid.UUID) ([]models.Task, error) {
 	return s.store.GetTasksForProject(ctx, projectId)
+}
+
+func (s *WorkspaceService) AssignTaskToUser(ctx context.Context, taskId, userId uuid.UUID) error {
+	err := s.store.AssignTask(ctx, taskId, userId)
+	if err != nil {
+		if strings.Contains(err.Error(), "SQLSTATE 23505") {
+			return ErrDuplicateEntry
+		}
+
+		return ErrFailedOperation
+	}
+
+	return nil
+}
+
+func (s *WorkspaceService) GetAssignedUsers(ctx context.Context, taskId uuid.UUID) ([]models.User, error) {
+	return s.store.GetAssignedUsers(ctx, taskId)
+}
+func (s *WorkspaceService) UnassignTask(ctx context.Context, taskId, userId uuid.UUID) error {
+	return s.store.UnassignTask(ctx, taskId, userId)
 }

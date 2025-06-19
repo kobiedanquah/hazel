@@ -9,4 +9,5 @@ var (
 	ErrFailedOperation    = errors.New("failed to complete operation")
 	ErrInvalidPassword    = errors.New("password must be between 8 and 20 characters")
 	ErrInvalidDateFormat  = errors.New("the provided date format is not valid; expected: 'YYYY-MM-DD'")
+	ErrDuplicateEntry     = errors.New("an entry for this entity already exists")
 )

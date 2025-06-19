@@ -2,10 +2,12 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 
 	"github.com/freekobie/hazel/models"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 )
 
 // CreateTask implements models.WorkspaceStore.
@@ -125,6 +127,72 @@ func (w *WorkspaceStore) UpdateTask(ctx context.Context, task *models.Task) erro
 	_, err := w.conn.Exec(ctx, query, task.Title, task.Description, task.Status, task.Priority, task.Due, task.LastModified, task.Id)
 	if err != nil {
 		slog.Error("failed to scan task", "error", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+// AssignTask implements models.WorkspaceStore.
+func (w *WorkspaceStore) AssignTask(ctx context.Context, taskId uuid.UUID, userId uuid.UUID) error {
+	query := `INSERT INTO task_assignments(task_id, user_id)
+	VALUES($1, $2)`
+
+	_, err := w.conn.Exec(ctx, query, taskId, userId)
+	if err != nil {
+		slog.Error("failed to assign task to user", "error", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+// GetAssignedUsers implements models.WorkspaceStore.
+func (w *WorkspaceStore) GetAssignedUsers(ctx context.Context, taskId uuid.UUID) ([]models.User, error) {
+	query := `SELECT
+	u.id,
+	u.name,
+	u.email,
+	u.profile_photo,
+	u.created_at,
+	u.last_modified
+	FROM task_assignments AS ta
+	INNER JOIN users AS u ON ta.user_id = u.id
+	WHERE ta.task_id = $1;`
+
+	users := []models.User{}
+
+	rows, err := w.conn.Query(ctx, query, taskId)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, models.ErrNotFound
+		}
+
+		slog.Error("failed to fetch users", "error", err.Error())
+		return nil, err
+	}
+
+	for rows.Next() {
+		user := models.User{}
+		err := rows.Scan(&user.Id, &user.Name, &user.Email, &user.ProfilePhoto, &user.CreatedAt, &user.LastModifed)
+		if err != nil {
+			slog.Error("failed to scan users", "error", err.Error())
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
+// UnassignTask implements models.WorkspaceStore.
+func (w *WorkspaceStore) UnassignTask(ctx context.Context, taskId uuid.UUID, userId uuid.UUID) error {
+	query := `DELETE FROM task_assignments WHERE task_id = $1 AND user_id = $2;`
+
+	_, err := w.conn.Exec(ctx, query, taskId, userId)
+	if err != nil {
+		slog.Error("failed to delete task assignment", "error", err.Error())
 		return err
 	}
 

@@ -135,3 +135,81 @@ func (h *Handler) DeleteTask(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "project successfully deleted"})
 }
+
+func (h *Handler) AssignTaskToUser(c *gin.Context) {
+	id, err := getUUIDparam(c, "id")
+	if err != nil {
+		slog.Error("failed to get uuid param", "error", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
+		return
+	}
+
+	var input struct {
+		UserId uuid.UUID `json:"userId" validate:"required,uuid"`
+	}
+
+	err = c.ShouldBindJSON(&input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	err = h.wss.AssignTaskToUser(c.Request.Context(), id, input.UserId)
+	if err != nil {
+		if errors.Is(err, services.ErrFailedOperation) {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
+			return
+		}
+
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "task successfully assigned to user"})
+
+}
+
+func (h *Handler) RemoveAssignment(c *gin.Context) {
+	id, err := getUUIDparam(c, "id")
+	if err != nil {
+		slog.Error("failed to get uuid param", "error", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
+		return
+	}
+
+	userId, err := getUUIDparam(c, "user_id")
+	if err != nil {
+		slog.Error("failed to get uuid param", "error", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
+		return
+	}
+
+	err = h.wss.UnassignTask(c.Request.Context(), id, userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "task assignment successfully removed"})
+}
+
+func (h *Handler) GetAssignedUsers(c *gin.Context) {
+	id, err := getUUIDparam(c, "id")
+	if err != nil {
+		slog.Error("failed to get uuid param", "error", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid id format"})
+		return
+	}
+
+	users, err := h.wss.GetAssignedUsers(c.Request.Context(), id)
+	if err != nil {
+		if errors.Is(err, models.ErrNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
+}

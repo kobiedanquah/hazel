@@ -15,7 +15,7 @@
 - [X] Password hashing (bcrypt)
 - [X] JWT generation (access token)
 - [X] JWT middleware for route protection
-- [ ] **Role-based middleware (Admin, Manager, User)** 
+- [ ] Role-based middleware (Admin, Manager, User) 
 
 ---
 
@@ -92,7 +92,6 @@
 
 ## Documentation
 - [ ] API documentation (Swagger / OpenAPI via `swaggo`)
-- [ ] Postman collection or Insomnia setup
 - [ ] README.md with setup, build, and API usage instructions
 
 ---
@@ -102,7 +101,6 @@
 - [ ] `docker-compose.yml` for dev and prod
 - [ ] Environment-based config (dev, staging, prod)
 - [ ] Health check endpoint
-- [ ] Deploy to platform (e.g., Render, AWS, Railway)
 - [ ] Configure persistent PostgreSQL volume
 - [ ] Setup CORS, HTTPS, etc.
 

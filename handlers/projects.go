@@ -11,6 +11,18 @@ import (
 	"github.com/google/uuid"
 )
 
+// CreateProject godoc
+// @Summary      Create project
+// @Description  Create a new project in a workspace
+// @Tags         projects
+// @Security     BearerAuth
+// @Accept       json
+// @Produce      json
+// @Param        project  body      object  true  "Project info"
+// @Success      201   {object}  models.Project
+// @Failure      400   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /projects [post]
 func (h *Handler) CreateProject(c *gin.Context) {
 	var input struct {
 		WorkspaceId uuid.UUID   `json:"workspaceId" binding:"required,uuid"`
@@ -41,6 +53,18 @@ func (h *Handler) CreateProject(c *gin.Context) {
 	c.JSON(http.StatusCreated, project)
 }
 
+// GetProject godoc
+// @Summary      Get project
+// @Description  Get a project by ID
+// @Tags         projects
+// @Security     BearerAuth
+// @Produce      json
+// @Param        id   path      string  true  "Project ID"
+// @Success      200  {object}  models.Project
+// @Failure      400  {object}  map[string]string
+// @Failure      404  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /projects/{id} [get]
 func (h *Handler) GetProject(c *gin.Context) {
 	id, err := getUUIDparam(c, "id")
 	if err != nil {
@@ -63,6 +87,21 @@ func (h *Handler) GetProject(c *gin.Context) {
 
 }
 
+// UpdateProject godoc
+// @Summary      Update project
+// @Description  Update project details
+// @Tags         projects
+// @Security     BearerAuth
+// @Accept       json
+// @Produce      json
+// @Param        id      path      string  true  "Project ID"
+// @Param        project body      object  true  "Project update info"
+// @Success      200   {object}  models.Project
+// @Failure      400   {object}  map[string]string
+// @Failure      404   {object}  map[string]string
+// @Failure      422   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /projects/{id} [patch]
 func (h *Handler) UpdateProject(c *gin.Context) {
 	id, err := getUUIDparam(c, "id")
 	if err != nil {
@@ -97,6 +136,18 @@ func (h *Handler) UpdateProject(c *gin.Context) {
 	c.JSON(http.StatusOK, ws)
 }
 
+// GetProjectsInWorkspace godoc
+// @Summary      Get projects in workspace
+// @Description  Get all projects for a workspace
+// @Tags         projects
+// @Security     BearerAuth
+// @Produce      json
+// @Param        id   path      string  true  "Workspace ID"
+// @Success      200  {array}   models.Project
+// @Failure      400  {object}  map[string]string
+// @Failure      404  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /workspaces/{id}/projects [get]
 func (h *Handler) GetProjectsInWorkspace(c *gin.Context) {
 	id, err := getUUIDparam(c, "id")
 	if err != nil {
@@ -118,6 +169,17 @@ func (h *Handler) GetProjectsInWorkspace(c *gin.Context) {
 	c.JSON(http.StatusOK, projects)
 }
 
+// DeleteProject godoc
+// @Summary      Delete project
+// @Description  Delete a project by ID
+// @Tags         projects
+// @Security     BearerAuth
+// @Produce      json
+// @Param        id   path      string  true  "Project ID"
+// @Success      200  {object}  map[string]string
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /projects/{id} [delete]
 func (h *Handler) DeleteProject(c *gin.Context) {
 	id, err := getUUIDparam(c, "id")
 	if err != nil {

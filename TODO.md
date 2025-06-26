@@ -15,7 +15,6 @@
 - [X] Password hashing (bcrypt)
 - [X] JWT generation (access token)
 - [X] JWT middleware for route protection
-- [ ] Role-based middleware (Admin, Manager, User) 
 
 ---
 
@@ -73,35 +72,22 @@
 
 ## Middleware & Utilities
 - [X] JWT authentication middleware
-- [ ] Error handling middleware
-- [ ] Request logging (Gin's logger or `zap`)
-- [ ] Rate limiting (`golang.org/x/time/rate`)
+- [X] Request logging (Gin's logger or `zap`)
 - [X] Input validation (`go-playground/validator`)
 
 ---
 
 ## Testing
 - [ ] Unit tests for handlers
-- [ ] Unit tests for services and database logic
+- [X] Unit tests for services and database logic
 - [ ] Integration tests with PostgreSQL
 - [ ] Authentication & RBAC tests
 - [ ] Mock external dependencies
-- [ ] Test coverage tracking
 
 ---
 
 ## Documentation
-- [ ] API documentation (Swagger / OpenAPI via `swaggo`)
-- [ ] README.md with setup, build, and API usage instructions
-
----
-
-## Deployment
-- [ ] Production-ready Dockerfile
-- [ ] `docker-compose.yml` for dev and prod
-- [ ] Environment-based config (dev, staging, prod)
-- [ ] Health check endpoint
-- [ ] Configure persistent PostgreSQL volume
-- [ ] Setup CORS, HTTPS, etc.
+- [X] API documentation (Swagger / OpenAPI via `swaggo`)
+- [X] README.md with setup, build, and API usage instructions
 
 ---

@@ -71,15 +71,30 @@ If you have [Task](https://taskfile.dev/) installed, you can use the included `T
   task up
   ```
 
+## Documentation
+> **http://localhost:8080/swagger/index.html**
+
+![Swagger Documentation Screenshot](screenshot.png)
+
 ## Running Tests
 
 ```sh
 go test ./...
 ```
 
+## Run a development server
+
+You can use [Air](https://github.com/cosmtrek/air) for live-reloading during development:
+
+```sh
+go install github.com/cosmtrek/air@latest
+air
+```
+
+This will automatically reload the server on code changes using the `air` tool.
+
 ## Project Structure
 
-- `cmd/server/` - Application entrypoint and configuration
 - `handlers/` - HTTP route handlers
 - `services/` - Business logic
 - `models/` - Data models and interfaces

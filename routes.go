@@ -1,22 +1,37 @@
 package main
 
 import (
+	"github.com/freekobie/hazel/docs"
 	"github.com/freekobie/hazel/middlewares"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
 
 func (app *application) routes() *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
-	// users
-	router.POST("/auth/register", app.handler.CreateUser)
-	router.POST("/auth/login", app.handler.LoginUser)
-	router.POST("/auth/access", app.handler.GetUserAccessToken)
-	router.POST("/auth/verify", app.handler.VerifyUser)
-	router.POST("/auth/verify/request", app.handler.RequestVerification)
 
-	protected := router.Group("/")
+	docs.SwaggerInfo.BasePath = "/api/v1"
+
+	open := router.Group("/api/v1")
+	open.GET("/ping", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"status": "200",
+			"message": "online",
+		})
+	})
+
+	// users
+	open.POST("/auth/register", app.handler.CreateUser)
+	open.POST("/auth/login", app.handler.LoginUser)
+	open.POST("/auth/access", app.handler.GetUserAccessToken)
+	open.POST("/auth/verify", app.handler.VerifyUser)
+	open.POST("/auth/verify/request", app.handler.RequestVerification)
+
+	protected := open.Group("/")
 	protected.Use(middlewares.Authentication())
 	{
 		//users
@@ -32,7 +47,7 @@ func (app *application) routes() *gin.Engine {
 		protected.DELETE("/workspaces/:id", app.handler.DeleteWorkspace)
 		protected.POST("/workspaces/:id/members", app.handler.AddWorkspaceMember)
 		protected.GET("/workspaces/:id/members", app.handler.GetWorkspaceMembers)
-		protected.DELETE("/workspaces/:id/members/:member_id", app.handler.DeleteWorkspaceMember)
+		protected.DELETE("/workspaces/:id/members/:user_id", app.handler.DeleteWorkspaceMember)
 		protected.GET("/workspaces/:id/projects", app.handler.GetProjectsInWorkspace)
 
 		// projects
@@ -51,6 +66,9 @@ func (app *application) routes() *gin.Engine {
 		protected.GET("/tasks/:id/assignments", app.handler.GetAssignedUsers)
 		protected.DELETE("/tasks/:id/assignments/:user_id", app.handler.RemoveAssignment)
 	}
+
+	// swagger
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return router
 }

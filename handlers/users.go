@@ -13,6 +13,18 @@ import (
 	"github.com/google/uuid"
 )
 
+// CreateUser godoc
+// @Summary      Register a new user
+// @Description  Create a new user account
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        user  body      object  true  "User registration info"
+// @Success      201   {object}  map[string]interface{}
+// @Failure      400   {object}  map[string]string
+// @Failure      409   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /auth/register [post]
 func (h *Handler) CreateUser(c *gin.Context) {
 	var input struct {
 		Name     string `json:"name" binding:"required"`
@@ -38,6 +50,17 @@ func (h *Handler) CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
 
+// VerifyUser godoc
+// @Summary      Verify user email
+// @Description  Verify a user's email with a code
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        verification  body      object  true  "Verification info"
+// @Success      200   {object}  map[string]interface{}
+// @Failure      400   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /auth/verify [post]
 func (h *Handler) VerifyUser(c *gin.Context) {
 	var input struct {
 		Email string `json:"email" binding:"required,email"`
@@ -62,6 +85,19 @@ func (h *Handler) VerifyUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"user": user})
 }
 
+// RequestVerification godoc
+// @Summary      Request verification email
+// @Description  Request a new verification code for a user
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        email  body      object  true  "User email"
+// @Success      202   {object}  map[string]string
+// @Failure      400   {object}  map[string]string
+// @Failure      404   {object}  map[string]string
+// @Failure      422   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /auth/verify/request [post]
 func (h *Handler) RequestVerification(c *gin.Context) {
 	var input struct {
 		Email string `json:"email" binding:"required,email"`
@@ -90,6 +126,18 @@ func (h *Handler) RequestVerification(c *gin.Context) {
 
 }
 
+// LoginUser godoc
+// @Summary      Login user
+// @Description  Authenticate user and return session tokens
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        credentials  body      object  true  "User credentials"
+// @Success      200   {object}  map[string]interface{}
+// @Failure      400   {object}  map[string]string
+// @Failure      401   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /auth/login [post]
 func (h *Handler) LoginUser(c *gin.Context) {
 	var input struct {
 		Email    string `json:"email" binding:"required"`
@@ -114,6 +162,18 @@ func (h *Handler) LoginUser(c *gin.Context) {
 	c.JSON(http.StatusOK, session)
 }
 
+// GetUserAccessToken godoc
+// @Summary      Refresh access token
+// @Description  Get a new access token using a refresh token
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        refreshToken  body      object  true  "Refresh token"
+// @Success      200   {object}  map[string]interface{}
+// @Failure      400   {object}  map[string]string
+// @Failure      401   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /auth/access [post]
 func (h *Handler) GetUserAccessToken(c *gin.Context) {
 
 	var input struct {
@@ -139,6 +199,18 @@ func (h *Handler) GetUserAccessToken(c *gin.Context) {
 
 }
 
+// GetUser godoc
+// @Summary      Get user by ID
+// @Description  Get user details by user ID
+// @Tags         users
+// @Security     BearerAuth
+// @Produce      json
+// @Param        id   path      string  true  "User ID"
+// @Success      200  {object}  models.User
+// @Failure      400  {object}  map[string]string
+// @Failure      404  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /users/{id} [get]
 func (h *Handler) GetUser(c *gin.Context) {
 	userId := c.Param("id")
 	if err := validate.Var(userId, "uuid"); err != nil {
@@ -159,6 +231,19 @@ func (h *Handler) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// UpdateUserData godoc
+// @Summary      Update user data
+// @Description  Update user profile information
+// @Tags         users
+// @Security     BearerAuth
+// @Accept       json
+// @Produce      json
+// @Param        user  body      object  true  "User update info"
+// @Success      200   {object}  models.User
+// @Failure      400   {object}  map[string]string
+// @Failure      422   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /users/profile [patch]
 func (h *Handler) UpdateUserData(c *gin.Context) {
 	var input map[string]any
 	err := c.ShouldBindJSON(&input)
@@ -179,17 +264,29 @@ func (h *Handler) UpdateUserData(c *gin.Context) {
 
 	user, err := h.users.UpdateUser(c.Request.Context(), input)
 	if err != nil {
-		if !errors.Is(err, services.ErrFailedOperation) {
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		if errors.Is(err, services.ErrFailedOperation) {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, gin.H{"message": ErrServerError.Error()})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, user)
 }
 
+// DeleteUser godoc
+// @Summary      Delete user
+// @Description  Delete a user by ID
+// @Tags         users
+// @Security     BearerAuth
+// @Produce      json
+// @Param        id   path      string  true  "User ID"
+// @Success      200  {object}  map[string]string
+// @Failure      400  {object}  map[string]string
+// @Failure      404  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /users/{id} [delete]
 func (h *Handler) DeleteUser(c *gin.Context) {
 	userId := c.Param("id")
 	if err := validate.Var(userId, "uuid"); err != nil {
@@ -207,5 +304,5 @@ func (h *Handler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "user successfully deleted"})
+	c.JSON(http.StatusOK, gin.H{"message": "user deleted successfully"})
 }
